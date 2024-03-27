@@ -67,7 +67,7 @@ const colors = {
 let count = 0;
 let gameOver = false;
 let rAF = null; // keep track of the animation frame so we can cancel it
-const tetrominoSequence = [];
+let tetrominoSequence = [];
 let tetromino = getNextTetromino(); // object with name, matrix (rotation) col and row (position)
 
 // FUNCTIONS
@@ -75,14 +75,15 @@ let tetromino = getNextTetromino(); // object with name, matrix (rotation) col a
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + 1;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 } // get a random int in the range told by min and max
 
 function generateSequence() {
   const sequence = ["I", "J", "L", "O", "S", "T", "Z"];
   while (sequence.length) {
-    const random = getRandomInt(0, sequence.length - 1);
-    const name = sequence.splice(random, 1)[0];
+    const rand = getRandomInt(0, sequence.length - 1);
+    const name = sequence.splice(rand, 1)[0];
+    console.log(name);
     tetrominoSequence.push(name);
   }
 } //choose one random remaining letter from the sequence, remove it from the sequence and add it to tetrominoSequence
@@ -97,7 +98,7 @@ function getNextTetromino() {
 
   // setting spawn point
   const col = playfield[0].length / 2 - Math.ceil(matrix[0].length / 2);
-  const row = shapeName === "I" ? -1 : -2;
+  const row = name === "I" ? -1 : -2;
   // note: I and O start centerd, all other start in left-middle column
   // note: I start on row 21 (-1), all others start on row 22 (-2)
 
