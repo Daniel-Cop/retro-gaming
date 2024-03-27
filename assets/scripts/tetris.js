@@ -2,15 +2,28 @@
 //setting board
 const canvas = document.getElementById("game");
 const context = canvas.getContext("2d");
+const preview = document.getElementById("preview");
+const contextP = preview.getContext("2d");
 const unitSize = 32;
 
-//playfiled array 20*10
+// keep track of what is in every cell of the game using a 2d array
+// tetris playfield is 10x20, with a few rows offscreen
 const playfield = [];
 for (let row = -2; row < 20; row++) {
   playfield[row] = [];
 
   for (let col = 0; col < 10; col++) {
     playfield[row][col] = 0;
+  }
+}
+
+//preview area
+const prevfield = [];
+for (let row = 0; row < 5; row++) {
+  prevfield[row] = [];
+
+  for (let col = 0; col < 5; col++) {
+    prevfield[row][col] = 0;
   }
 }
 
@@ -67,7 +80,7 @@ const colors = {
 let count = 0;
 let gameOver = false;
 let rAF = null; // keep track of the animation frame so we can cancel it
-let tetrominoSequence = [];
+const tetrominoSequence = [];
 let tetromino = getNextTetromino(); // object with name, matrix (rotation) col and row (position)
 
 // FUNCTIONS
@@ -83,7 +96,6 @@ function generateSequence() {
   while (sequence.length) {
     const rand = getRandomInt(0, sequence.length - 1);
     const name = sequence.splice(rand, 1)[0];
-    console.log(name);
     tetrominoSequence.push(name);
   }
 } //choose one random remaining letter from the sequence, remove it from the sequence and add it to tetrominoSequence
@@ -111,7 +123,7 @@ function getNextTetromino() {
 }
 
 function rotate(matrix) {
-  const N = matrix.lengh - 1;
+  const N = matrix.length - 1;
   const result = matrix.map((row, i) => row.map((val, j) => matrix[N - j][i]));
   return result;
   //https://codereview.stackexchange.com/a/186834
@@ -138,7 +150,7 @@ function isValidMove(matrix, cellRow, cellCol) {
 
 function placeTetromino() {
   for (let row = 0; row < tetromino.matrix.length; row++) {
-    for (let col = 0; col < tetromino.matrix[row].lengh; col++) {
+    for (let col = 0; col < tetromino.matrix[row].length; col++) {
       if (tetromino.matrix[row][col]) {
         if (tetromino.row + row < 0) {
           // check if anypart of the tetromino is offscreen, in case is game over
@@ -155,7 +167,7 @@ function placeTetromino() {
       // drop every row above this one
       for (let r = row; r >= 0; r--) {
         for (let c = 0; c < playfield[r].length; c++) {
-          playfield[c][r] = playfield[r - 1][c];
+          playfield[r][c] = playfield[r - 1][c];
         }
       }
     } else {
@@ -184,8 +196,9 @@ function showGameOver() {
 function loop() {
   rAF = requestAnimationFrame(loop);
   context.clearRect(0, 0, canvas.width, canvas.height);
+  contextP.clearRect(0, 0, preview.width, preview.height);
 
-  //draw the playfiled
+  //draw the playfield (placed tetramino)
   for (let row = 0; row < 20; row++) {
     for (let col = 0; col < 10; col++) {
       if (playfield[row][col]) {
@@ -233,6 +246,24 @@ function loop() {
       }
     }
   }
+
+  //tentativo preview
+  if (tetromino) {
+    contextP.fillStyle = color[tetromino.name];
+
+    for (let row = 0; row < tetromino.matrix.lenght; row++) {
+      for (let col = 0; col < tetromino.matrix[row].lenght; col++) {
+        if (tetromino.matrix[row][col]) {
+          contextP.fillRect(
+            (2 + col) * unitSize,
+            (2 + row) * unitSize,
+            unitSize - 1,
+            unitSize - 1
+          );
+        }
+      }
+    }
+  }
 } // game loop and draw
 
 // EVENTS
@@ -271,4 +302,5 @@ document.addEventListener("keydown", function (e) {
   }
 });
 
+//start the game
 rAF = requestAnimationFrame(loop);

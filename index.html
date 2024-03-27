@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tetris</title>
-    <link rel="stylesheet" href="./assets/styles/tetris.css">
-</head>
+    <link rel="stylesheet" href="./assets/styles/tetris.css" />
+  </head>
 
-<body>
-    <canvas width="320" height="640" id="game"></canvas>
+  <body>
+    <div id="container">
+      <canvas width="320" height="640" id="game"></canvas>
+      <div id="console">
+        <canvas width="160" height="160" id="preview"></canvas>
+      </div>
+    </div>
     <script src="./assets/scripts/tetris.js"></script>
-</body>
-
+  </body>
 </html>
