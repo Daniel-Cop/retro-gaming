@@ -249,7 +249,7 @@ function loop() {
 
   //tentativo preview
   if (tetromino) {
-    contextP.fillStyle = color[tetromino.name];
+    contextP.fillStyle = colors[tetromino.name];
 
     for (let row = 0; row < tetromino.matrix.lenght; row++) {
       for (let col = 0; col < tetromino.matrix[row].lenght; col++) {
