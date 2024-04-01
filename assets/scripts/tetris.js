@@ -393,4 +393,4 @@ document.addEventListener("keydown", function (e) {
 });
 
 //start the game
-//rAF = requestAnimationFrame(loop);
+rAF = requestAnimationFrame(loop);
